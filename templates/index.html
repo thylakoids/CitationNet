@@ -84,6 +84,15 @@
   network.on("showPopup", function (params) {
         console.log( JSON.stringify(params, null, 4));
   });
+  //event doubleclick
+  network.on("doubleClick",function(params){
+  		var x=params.nodes[0];
+  		if (x){
+  			console.log('doubleClick node:')
+  			console.log(nodes.get(x));
+  			window.open('https://www.ncbi.nlm.nih.gov/pubmed/?teml='+x)
+  		}
+  });
   //event click
   network.on("click", function (params) {
         //params.event = "[original event]";

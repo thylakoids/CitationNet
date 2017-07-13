@@ -1,0 +1,127 @@
+
+<!doctype html>
+<html>
+<head>
+  <title> Citation Map</title>
+<link rel="shortcut icon" href="{{ url_for('static', filename='clay.ico') }}">
+  <script type="text/javascript" src="static/jquery.js"></script>
+  <script type="text/javascript" src="static/vis.js"></script>
+  <link href="static/vis-network.min.css" rel="stylesheet" type="text/css" />
+ <link href="static/button.css" rel="stylesheet" type="text/css" />
+  <style type="text/css">
+    #mynetwork {
+      width: 100vw;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+    #addnode{
+      z-index:1;
+    }
+  </style>
+</head>
+<body>
+<table id="addnode">
+                <tr>
+                        <input id="node-id" type="text" value="21685086" class='input'>
+                </tr>
+                <tr>
+                        <button id="node-add" class="button" onclick="addNode(document.getElementById('node-id').value);">GO</button>
+                </tr>
+</table>
+  <!--mynetwork-->
+<div id="mynetwork"></div>
+<script type="text/javascript">
+        function addNode(id) {
+            try {
+                nodes.add({
+                    id: id,
+                    label: id
+                });
+            }
+            catch (err) {
+                //alert(err);
+            }
+        }
+         function addEdge(from,to) {
+            try {
+                edges.add({
+                    from: from,
+                    to: to,
+                    arrows:'to'
+                });
+            }
+            catch (err) {
+                alert(err);
+            }
+        }       
+  var nodes_j={{nodes|safe}}
+  // create an array with nodes
+  var nodes = new vis.DataSet(nodes_j);
+
+  // create an array with edges
+  var edges_j={{edges|safe}}
+  var edges = new vis.DataSet(edges_j)
+
+  // create a network
+  var container = document.getElementById('mynetwork');
+  var data = {
+    nodes: nodes,
+    edges: edges
+  };
+
+  var options = {interaction:{hover:true}};
+  
+  var network = new vis.Network(container, data, options);
+  
+  //event showpopup
+  network.on("showPopup", function (params) {
+        console.log( JSON.stringify(params, null, 4));
+  });
+  //event click
+  network.on("click", function (params) {
+        //params.event = "[original event]";
+        //document.getElementById('eventSpan').innerHTML = '<h2>Click event:</h2>' + JSON.stringify(params.nodes,null,4);
+        var x=params.nodes[0];
+        if (x){
+          console.log('clicked node:')
+          console.log(nodes.get(x));
+          if (nodes.get(x).clicked===undefined){
+            request.open('GET','/pubmed/'+x);
+            request.send();
+          }
+          else {
+            console.log('already clicked')
+          }
+        }       
+  });
+  //AJAX
+  var xhrProto = XMLHttpRequest.prototype,
+    origOpen = xhrProto.open;
+
+xhrProto.open = function (method, url) {
+    this._url = url;
+    return origOpen.apply(this, arguments);
+};
+  var request= new XMLHttpRequest();
+  request.onreadystatechange = function(){
+    if (request.readyState===4){
+      if (request.status===200){
+        console.log(request.response)
+        var responsedata=eval('('+request.response+')');
+        var citedpmids=responsedata['citedpmids'];
+        var originalpmid=request._url.split('/')[2];
+        //alert(citepmids);
+        citedpmids.map(function (x){ addNode(x)});
+        citedpmids.map(function (x){ addEdge(originalpmid,x)});
+        nodes.update({id:originalpmid,clicked:'yes',color:'pink',title:responsedata['title']})
+      }
+    }
+  };
+</script>
+
+
+</body>
+</html>

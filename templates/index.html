@@ -23,14 +23,18 @@
   </style>
 </head>
 <body>
+<!-- the topbar-->
 <table id="addnode">
                 <tr>
                         <input id="node-id" type="text" value="21685086" class='input'>
                 </tr>
                 <tr>
-                        <button id="node-add" class="button" onclick="addNode(document.getElementById('node-id').value);">GO</button>
+                        <button id="node-add" class="button" title="add node" onclick="addNode(document.getElementById('node-id').value);">GO</button>
                 </tr>
 </table>
+<!-- the buttons(github)-->
+<button id="githubicon" class="button" title="Github" onclick="window.open('https://github.com/thylakoids/flask')"></button>
+<button id="pubmedicon" class="button" title="Pubmed" onclick="window.open('https://www.ncbi.nlm.nih.gov/pubmed/')"></button>
   <!--mynetwork-->
 <div id="mynetwork"></div>
 <script type="text/javascript">

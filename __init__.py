@@ -1,9 +1,8 @@
 from Bio import Entrez
 from flask import Flask ,render_template,jsonify
 import json
-
+import pymysql
 Entrez.email = '812033546@qq.com'
-
 def get_citation_id(pmid):
 #get pubmed id list which cite this article
 	links = Entrez.elink(dbfrom="pubmed", id=pmid, linkname="pubmed_pubmed_citedin")	

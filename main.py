@@ -35,12 +35,17 @@ def getnode(pmid):
 	Title=result[0]
 	Citationin=json.loads(result[1])
 	cur.execute('select FullJournalName from pubmed where pmid = %s',pmid)
-	result=cur.fetchone()
+	result=cur.fetchone()[0]
 	print result
+	if cur.execute('select ImpactFactor from impactFactor_2017 where FullJournalTitle =%s ',result):
+		result=cur.fetchone()[0]
+		print result
+	else:
+		print '?'
 	cur.close()
 	conn.close()
 	return jsonify({'title':Title,'citedpmids':Citationin})
 if __name__=='__main__':
 	import logging
     	logging.basicConfig(filename='flask.log',level=logging.DEBUG)
-	app.run(debug=False,threaded=True,port=4000,host='0.0.0.0')
+	app.run(debug=True,threaded=True,port=4000,host='127.0.0.1')

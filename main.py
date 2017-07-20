@@ -1,5 +1,4 @@
 from __init__ import *
-import time
 app=Flask(__name__,static_url_path='/static')
 #data=getdata()
 #data={'nodes':pd.read_excel('nodes1.xlsx'),'edges':pd.read_csv('edges1.csv')}
@@ -31,7 +30,6 @@ def getnode(pmid):
 			print e
 		conn.commit()
 	#get data from database 
-	time.sleep(0)
 	cur.execute('select Title, Citationin from pubmed where pmid = %s',pmid)
 	result=cur.fetchone()
 	Title=result[0]

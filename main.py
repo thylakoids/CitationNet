@@ -34,6 +34,9 @@ def getnode(pmid):
 	result=cur.fetchone()
 	Title=result[0]
 	Citationin=json.loads(result[1])
+	cur.execute('select FullJournalName from pubmed where pmid = %s',pmid)
+	result=cur.fetchone()
+	print result
 	cur.close()
 	conn.close()
 	return jsonify({'title':Title,'citedpmids':Citationin})

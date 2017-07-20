@@ -19,32 +19,32 @@ def getnode(pmid):
 	#remove table
 	#cur.execute('DROP TABLE IF EXISTS pubmed')
 	#create table
-	#cur.execute('CREATE TABLE IF NOT EXISTS pubmed(pmid varchar(8),Title text(200),FullJournalName text(50),PubDate 	varchar(20),Citationin text(200),created timestamp default current_timestamp,primary key (pmid))')
+	#cur.execute('CREATE TABLE IF NOT EXISTS pubmed(pmid varchar(10),Title varchar(400),FullJournalName varchar(200),Source varchar(200),PubDate varchar(50),Citationin varchar(2000),created timestamp default current_timestamp,primary key (pmid))')
 	if not cur.execute('select 1 from pubmed where pmid = %s',pmid):
 		#if not exist, then search and add to database
 		summary=get_summary(pmid)
 		Citationin=get_citation_id(pmid)
 		try:
-			cur.execute('INSERT INTO pubmed(pmid,Title,FullJournalName,PubDate,Citationin) VALUES (%s,%s,%s,%s,%s)',(pmid,summary['Title'],summary['FullJournalName'],summary['PubDate'],json.dumps(Citationin)))
+			cur.execute('INSERT INTO pubmed(pmid,Title,FullJournalName,Source,PubDate,Citationin) VALUES (%s,%s,%s,%s,%s,%s)',(pmid,summary['Title'],summary['FullJournalName'],summary['Source'],summary['PubDate'],json.dumps(Citationin)))
 		except Exception,e:
 			print e
 		conn.commit()
 	#get data from database 
-	cur.execute('select Title, Citationin from pubmed where pmid = %s',pmid)
+	cur.execute('select Title, Citationin, FullJournalName,Source from pubmed where pmid = %s',pmid)
 	result=cur.fetchone()
 	Title=result[0]
 	Citationin=json.loads(result[1])
-	cur.execute('select FullJournalName from pubmed where pmid = %s',pmid)
-	result=cur.fetchone()[0]
-	print result
-	if cur.execute('select ImpactFactor from impactFactor_2017 where FullJournalTitle =%s ',result):
-		result=cur.fetchone()[0]
-		print result
+	Journal=result[2]
+	Source=result[3]
+	print Journal,Source
+	if cur.execute('select ImpactFactor from impactFactor_2017 where FullJournalTitle =%s ',Journal):
+		IF=cur.fetchone()[0]
 	else:
-		print '?'
+		IF='0'
+	print IF
 	cur.close()
 	conn.close()
-	return jsonify({'title':Title,'citedpmids':Citationin})
+	return jsonify({'title':Title,'citedpmids':Citationin,'Journal':Source,'IF':IF})
 if __name__=='__main__':
 	import logging
     	logging.basicConfig(filename='flask.log',level=logging.DEBUG)

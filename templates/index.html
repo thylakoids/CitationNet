@@ -76,7 +76,14 @@
     edges: edges
   };
 
-  var options = {interaction:{hover:true}};
+  var options = {
+    interaction:{hover:true},
+    nodes:{
+      size:15,
+      shape:'dot',
+      shadow:true
+    }
+  };
   
   var network = new vis.Network(container, data, options);
   
@@ -130,7 +137,7 @@ xhrProto.open = function (method, url) {
         //alert(citepmids);
         citedpmids.map(function (x){ addNode(x)});
         citedpmids.map(function (x){ addEdge(originalpmid,x)});
-        nodes.update({id:originalpmid,clicked:'yes',color:'pink',title:responsedata['title']})
+        nodes.update({id:originalpmid,clicked:'yes',title:responsedata['title'],group:responsedata['Journal'],label:responsedata['Journal'],size:parseFloat(responsedata['IF'])*2+10})
       }
     }
   };

@@ -10,7 +10,7 @@ def root():
 	return render_template('index.html',nodes=[],edges='[]')
 @app.route('/pubmed/<pmid>')
 def getnode(pmid):
-	#connect to mysql
+	#connect to mysql,utf-8
 	conn = pymysql.connect(user='root',charset='utf8')
 	cur=conn.cursor()
 	#create database

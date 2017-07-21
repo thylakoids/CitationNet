@@ -11,7 +11,7 @@ def root():
 @app.route('/pubmed/<pmid>')
 def getnode(pmid):
 	#connect to mysql
-	conn = pymysql.connect(user='root')
+	conn = pymysql.connect(user='root',charset='utf8')
 	cur=conn.cursor()
 	#create database
 	#cur.execute('CREATE DATABASE IF NOT EXISTS citationMap')
@@ -34,18 +34,20 @@ def getnode(pmid):
 	result=cur.fetchone()
 	Title=result[0]
 	#27773806 decode error
+	#28360131
 	Citationin=json.loads(result[1])
 	Journal=result[2]
 	Source=result[3]
-	print Journal,Source
 	if cur.execute('select ImpactFactor from impactFactor_2017 where FullJournalTitle =%s ',Journal):
 		IF=cur.fetchone()[0]
 	else:
 		IF='0'
-	print IF
+	try:
+		IF=float(IF)
+	except Exception,e:
+		IF=0
 	cur.close()
 	conn.close()
-	print Title
 	return jsonify({'title':Title,'citedpmids':Citationin,'Journal':Source,'IF':IF})
 if __name__=='__main__':
 	import logging

@@ -44,7 +44,8 @@
                 request.send();
                 nodes.add({
                     id: id,
-                    label: id
+                    label: id,
+                    group:1
                 });
             }
             catch (err) {
@@ -139,7 +140,9 @@ xhrProto.open = function (method, url) {
         //alert(citepmids);
         citedpmids.map(function (x){ addNode(x)});
         citedpmids.map(function (x){ addEdge(originalpmid,x)});
-        nodes.update({id:originalpmid,clicked:'yes',title:responsedata['title'],group:responsedata['Journal'],label:responsedata['Journal'],size:parseFloat(responsedata['IF'])*2+10})
+        var IF=responsedata['IF'];
+        if (IF===0){var IF='?'};
+        nodes.update({id:originalpmid,clicked:'yes',title:responsedata['title']+'\nIF:'+IF,group:responsedata['Journal'],label:responsedata['Journal'],size:parseFloat(responsedata['IF'])*2+10})
       }
     }
   };

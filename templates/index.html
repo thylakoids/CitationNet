@@ -40,8 +40,6 @@
 <script type="text/javascript">
         function addNode(id) {
             try {
-                request.open('GET','/pubmed/'+id);
-                request.send();
                 nodes.add({
                     id: id,
                     label: id,
@@ -137,12 +135,11 @@ xhrProto.open = function (method, url) {
         var responsedata=eval('('+request.response+')');
         var citedpmids=responsedata['citedpmids'];
         var originalpmid=request._url.split('/')[2];
-        //alert(citepmids);
+        var IF=responsedata['IF'];
         citedpmids.map(function (x){ addNode(x)});
         citedpmids.map(function (x){ addEdge(originalpmid,x)});
-        var IF=responsedata['IF'];
         if (IF===0){var IF='?'};
-        nodes.update({id:originalpmid,clicked:'yes',title:responsedata['title']+'\nIF:'+IF,group:responsedata['Journal'],label:responsedata['Journal'],size:parseFloat(responsedata['IF'])*2+10})
+        nodes.update({id:originalpmid,clicked:'yes',title:responsedata['title']+'IF:'+IF,group:responsedata['Journal'],label:responsedata['Journal'],size:parseFloat(responsedata['IF'])*2+10,citedpmids:citedpmids})
       }
     }
   };

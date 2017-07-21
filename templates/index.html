@@ -40,6 +40,8 @@
 <script type="text/javascript">
         function addNode(id) {
             try {
+                request.open('GET','/pubmed/'+id);
+                request.send();
                 nodes.add({
                     id: id,
                     label: id
@@ -109,7 +111,7 @@
           console.log('clicked node:')
           console.log(nodes.get(x));
           if (nodes.get(x).clicked===undefined){
-            request.open('GET','/pubmed/'+x);
+            request.open('GET','/pubmed/'+x,true);
             request.send();
           }
           else {

@@ -33,6 +33,7 @@ def getnode(pmid):
 	cur.execute('select Title, Citationin, FullJournalName,Source from pubmed where pmid = %s',pmid)
 	result=cur.fetchone()
 	Title=result[0]
+	#27773806 decode error
 	Citationin=json.loads(result[1])
 	Journal=result[2]
 	Source=result[3]
@@ -44,6 +45,7 @@ def getnode(pmid):
 	print IF
 	cur.close()
 	conn.close()
+	print Title
 	return jsonify({'title':Title,'citedpmids':Citationin,'Journal':Source,'IF':IF})
 if __name__=='__main__':
 	import logging

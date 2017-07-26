@@ -35,10 +35,13 @@ def getnode(pmid):
 	Title=result[0]
 	#27773806 decode error
 	#28360131
+	#27609891 science
 	Citationin=json.loads(result[1])
 	Journal=result[2]
 	Source=result[3]
 	if cur.execute('select ImpactFactor from impactFactor_2017 where FullJournalTitle =%s ',Journal):
+		IF=cur.fetchone()[0]
+	elif cur.execute('select ImpactFactor from impactFactor_2017 where FullJournalTitle =%s ',Source):
 		IF=cur.fetchone()[0]
 	else:
 		IF='0'

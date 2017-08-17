@@ -1,0 +1,7 @@
+#learn
+learn
+#pdf file
+*.pdf
+*.py[cod]
+#log
+*.log

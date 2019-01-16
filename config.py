@@ -16,6 +16,7 @@ class Config:
     email = 'jwlygr98235@chacuo.net'
     logfile = 'flask.log'
     host = '127.0.0.1'
+    port = '4000'
 
     @staticmethod
     def init_app(app):

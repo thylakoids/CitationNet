@@ -1,5 +1,5 @@
 # logging info
-flask.log
+*.log
 
 #sqlite
 *.db

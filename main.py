@@ -1,5 +1,5 @@
 from flask import Flask, render_template, jsonify
-from getdata import getdata
+from getdata import getdata, config
 
 app = Flask(__name__, static_url_path='/static')
 
@@ -16,5 +16,7 @@ def getnode(pmid):
 
 if __name__ == '__main__':
     import logging
-    logging.basicConfig(filename='flask.log', level=logging.DEBUG)
-    app.run(debug=False, threaded=True, port=4000, host='127.0.0.1')
+    flaskConfig = 'default'
+    config = config[flaskConfig]
+    logging.basicConfig(filename=config.logfile, level=logging.DEBUG)
+    app.run(debug=config.DEBUG, threaded=True, port=4000, host=config.host)

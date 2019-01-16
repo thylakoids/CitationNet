@@ -1,0 +1,8 @@
+# logging info
+flask.log
+
+#sqlite
+*.db
+
+#python3
+__pycache__
